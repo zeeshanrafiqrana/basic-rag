@@ -24,8 +24,20 @@ class UploadService {
     const normalized = this.normalizeText(rawText);
     const rawQuotes = this.extractQuotes(normalized);
     const cleanedQuotes = await AzureOpenAIService.enhanceQuotes(rawQuotes);
-    return Promise.all(cleanedQuotes.map(q => AzureOpenAIService.enrichQuote(q)));
+  
+    const enrichedQuotes = await Promise.all(
+      cleanedQuotes.map(async quote => {
+        const enriched = await AzureOpenAIService.enrichQuote(quote);
+        return {
+          ...quote,         
+          ...enriched      
+        };
+      })
+    );
+  
+    return enrichedQuotes;
   }
+  
   /**
    * Normalizes the text by removing timestamps and extra spaces
    * @param {string} text - Text to normalize

@@ -2,6 +2,8 @@ import { RESPONSE_MESSAGES, API_STATUS_CODES } from "../constant/apiStatus.mjs";
 import UploadService from "../app/service/uploadService.mjs";
 import AzureOpenAIService from "../app/service/azureOpenAIService.mjs";
 import { unlink } from 'fs/promises'; 
+import QuoteRepository from "../app/repositories/quoteRepository.mjs";
+
 
 class UploadController {
     /**
@@ -36,6 +38,14 @@ class UploadController {
                 })
               );
   
+              const savedFile = await QuoteRepository.saveFile({
+                originalName: file.originalname,
+                path: file.path,
+                mimetype: file.mimetype
+              });
+              
+              await QuoteRepository.saveQuotes(savedFile.id, processedQuotes);
+
               return {
                 originalName: file.originalname,
                 path: file.path,

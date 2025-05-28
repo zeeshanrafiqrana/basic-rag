@@ -33,6 +33,10 @@ const Quote = sequelize.define('Quote', {
   confidence: {
     type: DataTypes.FLOAT
   },
+  embedding: {
+    type: DataTypes.ARRAY(DataTypes.FLOAT), 
+    allowNull: true
+  },
   createdAt: {
     type: DataTypes.DATE,
     defaultValue: DataTypes.NOW
