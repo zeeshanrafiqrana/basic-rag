@@ -14,7 +14,7 @@ class QuoteRepository {
      * @param {number} fileId - The ID of the file to retrieve.
      * @returns {Promise<File|null>} The file record or null if not found.
      */
-    static async saveQuotes(fileId, quotes) {
+    static async saveQuotes(fileId, quotes, conversationId) {
         return await Quote.bulkCreate(
             quotes.map(q => ({
                 fileId,
@@ -26,7 +26,8 @@ class QuoteRepository {
                 category: q.classification?.category || null,
                 subcategory: q.classification?.subcategory || null,
                 confidence: q.classification?.confidence || null,
-                embedding: q.embedding || null
+                embedding: q.embedding || null,
+                conversationId: conversationId || null
             }))
         );
     }

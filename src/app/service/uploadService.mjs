@@ -29,15 +29,14 @@ class UploadService {
       cleanedQuotes.map(async quote => {
         const enriched = await AzureOpenAIService.enrichQuote(quote);
         return {
-          ...quote,         
-          ...enriched      
+          ...quote,
+          ...enriched
         };
       })
     );
   
     return enrichedQuotes;
   }
-  
   /**
    * Normalizes the text by removing timestamps and extra spaces
    * @param {string} text - Text to normalize
@@ -82,7 +81,6 @@ class UploadService {
 
     return structuredQuotes;
   }
-
 }
 
 export default UploadService;

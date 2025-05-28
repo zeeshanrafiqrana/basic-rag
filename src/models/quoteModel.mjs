@@ -37,6 +37,10 @@ const Quote = sequelize.define('Quote', {
     type: DataTypes.ARRAY(DataTypes.FLOAT), 
     allowNull: true
   },
+  conversationId: {
+    type: DataTypes.UUID,
+    allowNull: true
+  },
   createdAt: {
     type: DataTypes.DATE,
     defaultValue: DataTypes.NOW

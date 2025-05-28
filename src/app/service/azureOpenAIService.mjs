@@ -156,6 +156,111 @@ class AzureOpenAIService {
       .replace(/^.*?(Dear Reader,)/is, '$1')
       .trim();
   }
+  /**
+   * Explains why a document is relevant to a query
+   * @param {string} query - Search query
+   * @param {string} documentText - Document content
+   * @returns {Promise<string>} - Explanation text
+   */
+  static async explainRelevance(query, documentText) {
+    const response = await client.chat.completions.create({
+      model: process.env.AZURE_OPENAI_MODEL,
+      messages: [
+        {
+          role: "system",
+          content: "Explain in 1-2 sentences why this document is relevant to the query."
+        },
+        {
+          role: "user",
+          content: `Query: "${query}"\n\nDocument:\n${documentText}`
+        }
+      ],
+      temperature: 0.3
+    });
+    
+    return response.choices[0].message.content.trim();
+  }
+  /**
+   * Extracts key information from a document
+   * @param {string} documentText - Document content
+   * @returns {Promise<Object>} - Key information
+   */
+  static async extractKeyInfo(documentText) {
+    const response = await client.chat.completions.create({
+      model: process.env.AZURE_OPENAI_MODEL,
+      messages: [
+        {
+          role: "system",
+          content: `Extract key information as JSON: {
+            "mainTopic": string,
+            "keyPoints": string[],
+            "actionItems": string[]
+          }`
+        },
+        {
+          role: "user",
+          content: documentText
+        }
+      ],
+      response_format: { type: "json_object" },
+      temperature: 0.1
+    });
+    
+    try {
+      return JSON.parse(response.choices[0].message.content);
+    } catch (error) {
+      console.error('Failed to parse key info:', error);
+      return {
+        mainTopic: '',
+        keyPoints: [],
+        actionItems: []
+      };
+    }
+  }
+  /**
+   * Generates a concise summary answer based on search results
+   * @param {string} query - The user's original query
+   * @param {string} contextText - Combined text of relevant documents
+   * @returns {Promise<string>} - Generated summary answer
+   */
+  static async generateSummaryAnswer(query, contextText) {
+    try {
+      const response = await client.chat.completions.create({
+        model: process.env.AZURE_OPENAI_MODEL,
+        messages: [
+          {
+            role: "system",
+            content: `You are a helpful assistant that provides concise answers based on provided documents.
+            Rules:
+            1. Answer ONLY using information from the provided context
+            2. Be brief and to the point (1-2 paragraphs max)
+            3. If unsure, say "Based on the documents, I found..."
+            4. Never invent information`
+          },
+          {
+            role: "user",
+            content: `Question: ${query}\n\nRelevant Documents:\n${contextText}`
+          }
+        ],
+        temperature: 0.3,
+        max_tokens: 300
+      });
+
+      const answer = response.choices[0].message.content.trim();
+
+      if (answer.toLowerCase().includes("i don't know") || 
+          answer.toLowerCase().includes("i couldn't find") ||
+          answer.length < 10) {
+        return "I found some relevant documents but couldn't generate a concise summary. Please review the individual results.";
+      }
+
+      return answer;
+
+    } catch (error) {
+      console.error('Summary generation failed:', error);
+      return "I couldn't generate a summary due to an error. Please review the individual results.";
+    }
+  }
 }
 
 export default AzureOpenAIService;
