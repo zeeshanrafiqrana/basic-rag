@@ -37,7 +37,7 @@ class QuoteSearchService {
         try {
             const fileContent = await sequelize.query(
                 `SELECT "originalText", "cleanedText" 
-             FROM "Quotes"
+             FROM "Quote"
              WHERE "conversationId" = :conversationId
              ORDER BY "position" ASC`,
                 {
