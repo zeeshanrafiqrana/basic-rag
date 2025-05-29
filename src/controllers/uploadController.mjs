@@ -14,7 +14,7 @@ class UploadController {
    */
   static async uploadDocsController(req, res) {
     try {
-      const conversationId = uuidv4();
+      const { conversationId } = req.params;
 
       UploadController.processFilesAsync(req.files, conversationId);
       return res.status(API_STATUS_CODES.SUCCESS).json({
