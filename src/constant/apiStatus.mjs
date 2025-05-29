@@ -25,6 +25,10 @@ const RESPONSE_MESSAGES = {
   ERROR_COMPARE_PASSWORD: "Error comparing passwords",
   FORBIDDEN: "Access denied. You do not have the required permissions.",
   INVALID_INPUT: "Invalid input: Expected an array of user objects.",
+  PROCESSING_FAILED: "Failed to process the uploaded files",
+  DOCUMENT_PROCESSING_BACKGROUND: "Documents are being processed in the background",
+  FILE_NOT_FOUND: "File not found",
+  NO_DOCUMENT_CONTENT: "No document content found for the provided conversation ID",
 };
 
 export { API_STATUS_CODES, RESPONSE_MESSAGES };

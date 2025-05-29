@@ -124,7 +124,6 @@ class AzureOpenAIService {
       };
   
     } catch (error) {
-      console.error('Quote enrichment failed:', error.message);
       return {
         ...quote,
         classification: { error: error.message }
@@ -209,7 +208,6 @@ class AzureOpenAIService {
     try {
       return JSON.parse(response.choices[0].message.content);
     } catch (error) {
-      console.error('Failed to parse key info:', error);
       return {
         mainTopic: '',
         keyPoints: [],
@@ -223,42 +221,39 @@ class AzureOpenAIService {
    * @param {string} contextText - Combined text of relevant documents
    * @returns {Promise<string>} - Generated summary answer
    */
-  static async generateSummaryAnswer(query, contextText) {
+  static async generateSummaryAnswer(query, contextText, messageHistory = []) {
     try {
+      const messages = [
+        {
+          role: "system",
+          content: `Provide summary answer considering conversation history. Rules:
+          1. Use only provided context
+          2. Be concise (1-2 paragraphs)
+          3. Never invent information`
+        },
+        ...messageHistory.map(msg => ({
+          role: msg.type === 'user' ? 'user' : 'assistant',
+          content: msg.content
+        })),
+        {
+          role: "user",
+          content: `Question: ${query}\nContext:\n${contextText}`
+        }
+      ];
+
       const response = await client.chat.completions.create({
         model: process.env.AZURE_OPENAI_MODEL,
-        messages: [
-          {
-            role: "system",
-            content: `You are a helpful assistant that provides concise answers based on provided documents.
-            Rules:
-            1. Answer ONLY using information from the provided context
-            2. Be brief and to the point (1-2 paragraphs max)
-            3. If unsure, say "Based on the documents, I found..."
-            4. Never invent information`
-          },
-          {
-            role: "user",
-            content: `Question: ${query}\n\nRelevant Documents:\n${contextText}`
-          }
-        ],
+        messages,
         temperature: 0.3,
         max_tokens: 300
       });
 
       const answer = response.choices[0].message.content.trim();
-
-      if (answer.toLowerCase().includes("i don't know") || 
-          answer.toLowerCase().includes("i couldn't find") ||
-          answer.length < 10) {
-        return "I found some relevant documents but couldn't generate a concise summary. Please review the individual results.";
-      }
-
-      return answer;
+      return answer.includes("I don't know") ? 
+        "Found relevant documents but couldn't summarize." : answer;
 
     } catch (error) {
-      console.error('Summary generation failed:', error);
-      return "I couldn't generate a summary due to an error. Please review the individual results.";
+      return "I couldn't generate a summary due to an error.";
     }
   }
 }

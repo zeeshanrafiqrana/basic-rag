@@ -21,7 +21,7 @@ class UploadController {
         statusCode: API_STATUS_CODES.SUCCESS,
         message: RESPONSE_MESSAGES.SUCCESS,
         conversationId,
-        note: "Documents are being processed in the background"
+        note: RESPONSE_MESSAGES.DOCUMENT_PROCESSING_BACKGROUND
       });
 
     } catch (error) {
@@ -34,6 +34,7 @@ class UploadController {
       });
     }
   }
+
   /**
    * Processes files in the background and associates them with the conversation ID
    * @param {Array} files - Array of file objects from the request
