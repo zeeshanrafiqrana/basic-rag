@@ -1,4 +1,4 @@
-import { API_STATUS_CODES } from  './apiStatus.mjs'
+import { API_STATUS_CODES } from './apiStatus.mjs'
 
 const CONTROLLER_ERROR = {
     status: API_STATUS_CODES.INTERNAL_SERVER_ERROR,

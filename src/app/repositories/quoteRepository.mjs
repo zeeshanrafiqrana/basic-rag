@@ -1,5 +1,5 @@
 import File from '../../models/fileModel.mjs';
-import Quote from  '../../models/quoteModel.mjs';
+import Quote from '../../models/quoteModel.mjs';
 
 class QuoteRepository {
     /**

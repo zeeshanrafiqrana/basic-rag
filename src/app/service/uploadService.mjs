@@ -24,7 +24,7 @@ class UploadService {
     const normalized = this.normalizeText(rawText);
     const rawQuotes = this.extractQuotes(normalized);
     const cleanedQuotes = await AzureOpenAIService.enhanceQuotes(rawQuotes);
-  
+
     const enrichedQuotes = await Promise.all(
       cleanedQuotes.map(async quote => {
         const enriched = await AzureOpenAIService.enrichQuote(quote);
@@ -34,7 +34,7 @@ class UploadService {
         };
       })
     );
-  
+
     return enrichedQuotes;
   }
   /**

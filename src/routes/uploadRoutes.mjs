@@ -5,6 +5,6 @@ import upload from "../middleware/uploadMiddleware.mjs";
 
 const router = express.Router();
 
-router.post("/upload",jwtMiddleware, upload.array("documents", 10), UploadController.uploadDocsController);
+router.post("/upload", jwtMiddleware, upload.array("documents", 10), UploadController.uploadDocsController);
 
 export default router;

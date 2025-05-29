@@ -34,7 +34,7 @@ const Quote = sequelize.define('Quote', {
     type: DataTypes.FLOAT
   },
   embedding: {
-    type: DataTypes.ARRAY(DataTypes.FLOAT), 
+    type: DataTypes.ARRAY(DataTypes.FLOAT),
     allowNull: true
   },
   conversationId: {

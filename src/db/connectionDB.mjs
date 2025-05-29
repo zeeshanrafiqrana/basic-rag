@@ -1,6 +1,6 @@
 import { Sequelize } from 'sequelize';
 import ENV from '../../config.mjs';
-  
+
 const sequelize = new Sequelize(
     ENV.database.name,
     ENV.database.user,
@@ -15,7 +15,7 @@ const sequelize = new Sequelize(
             acquire: 30000,
             idle: 10000
         },
-        logging: false 
+        logging: false
     }
 );
 
