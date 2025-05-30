@@ -1,0 +1,16 @@
+backend/node_modules
+frontend/node_modules
+backend/.env
+frontend/.env
+frontend/.DS_Store
+frontend/logs
+frontend/npm-debug.log*
+frontend/pids
+frontend/lib-cov
+node_modules
+.env
+.DS_Store
+logs
+npm-debug.log*
+pids
+lib-cov
