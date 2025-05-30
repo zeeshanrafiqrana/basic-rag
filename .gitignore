@@ -6,6 +6,10 @@ logs/
 npm-debug.log*
 pids/
 lib-cov/
+# Ignore coverage reports
+coverage/
+# Ignore build artifacts
+dist/
 
 # Backend
 /backend/node_modules/
@@ -19,3 +23,5 @@ lib-cov/
 /frontend/npm-debug.log*
 /frontend/pids/
 /frontend/lib-cov/
+/frontend/coverage/
+/frontend/dist/
